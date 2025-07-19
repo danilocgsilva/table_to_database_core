@@ -1,7 +1,7 @@
-from table_to_database.ToDatabaseInterface import ToDatabaseInterface
+from .ToDatabaseInterface import ToDatabaseInterface
 import os
 
-class ToDatabase(ToDatabaseInterface):
+class ToDatabaseCore(ToDatabaseInterface):
     def __init__(self):
         self.file_path = None
 
