@@ -1,3 +1,4 @@
 table_to_database/__pycache__/*
 tests/__pycache__/*
 table_to_database/Facade/__pycache__/*
+table_to_database/Exceptions/__pycache__/*

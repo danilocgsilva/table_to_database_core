@@ -1,9 +1,11 @@
 from .ToDatabaseInterface import ToDatabaseInterface
+from .Exceptions.DriverNotSettedException import DriverNotSettedException
 import os
 
 class ToDatabaseCore(ToDatabaseInterface):
     def __init__(self):
         self.file_path = None
+        self.database_driver = None
 
     def to_database(self):
         if not self.file_path:
@@ -12,8 +14,9 @@ class ToDatabaseCore(ToDatabaseInterface):
         if not os.path.isfile(self.file_path):
             raise FileNotFoundError(f"The file {self.file_path} does not exist.")
         
-        print(f"Converting {self.file_path} to database...")
-
+        if self.database_driver is None:
+            raise DriverNotSettedException
+        
     def set_file(self, file_path: str):
         """Set the file path for the table to be converted."""
         self.file_path = file_path
