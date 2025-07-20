@@ -1,13 +1,40 @@
 from ..ToDatabaseCore import ToDatabaseCore
-import os
+from ..MySqlConfiguration import MySqlConfiguration
+from ..MySqlDriver import MySqlDriver
+from ..Exceptions.DriverNotSettedException import DriverNotSettedException
+from ..Exceptions.MissingDatabaseConfigurationException import MissingDatabaseConfigurationException
 
 class ToDatabase:
     def __init__(self):
         self.to_database_core = ToDatabaseCore()
+        self.database_configuration = MySqlConfiguration()
 
     def to_database(self):
-        self.to_database_core.to_database()
+        database_driver = MySqlDriver()
+        database_driver.set_database_configuration(self.database_configuration)
+        try:
+            self.to_database_core.to_database()
+        except DriverNotSettedException as e:
+            raise MissingDatabaseConfigurationException()
 
     def set_file(self, file_path: str):
         self.to_database_core.set_file(file_path)
+        
+    def set_database_host(self, host: str):
+        """Set the database host."""
+        if not host:
+            raise ValueError("Database host cannot be empty.")
+        self.database_configuration.host = host
+        
+    def set_database_user(self, user: str):
+        """Set the database user."""
+        if not user:
+            raise ValueError("Database user cannot be empty.")
+        self.database_configuration.user = user
+        
+    def set_database_password(self, password: str):
+        """Set the database password."""
+        if not password:
+            raise ValueError("Database password cannot be empty.")
+        self.database_configuration.password = password
         

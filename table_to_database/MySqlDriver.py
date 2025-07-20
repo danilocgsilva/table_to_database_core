@@ -1,4 +1,4 @@
-from MySqlConfiguration import MySqlConfiguration
+from .MySqlConfiguration import MySqlConfiguration
 
 class MySqlDriver:
     def __init__(self):
