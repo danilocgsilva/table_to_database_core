@@ -5,8 +5,8 @@ from ..Exceptions.DriverNotSettedException import DriverNotSettedException
 from ..Exceptions.MissingDatabaseConfigurationException import MissingDatabaseConfigurationException
 
 class ToDatabase:
-    def __init__(self):
-        self.to_database_core = ToDatabaseCore()
+    def __init__(self, to_database_core: ToDatabaseCore):
+        self.to_database_core = to_database_core
         self.database_configuration = MySqlConfiguration()
 
     def to_database(self):

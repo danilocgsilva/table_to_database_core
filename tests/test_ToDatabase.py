@@ -1,11 +1,12 @@
 import unittest
 from table_to_database.Facade.ToDatabase import ToDatabase
 from table_to_database.Exceptions.MissingDatabaseConfigurationException import MissingDatabaseConfigurationException
+from table_to_database.ToDatabaseCore import ToDatabaseCore
 from .TestUtils import TestUtils
 
 class test_ToDatabase(unittest.TestCase):
     def setUp(self):
-        self.toDatabase = ToDatabase()
+        self.toDatabase = ToDatabase(ToDatabaseCore())
         
     def test_set_not_existing_file(self):
         with self.assertRaises(FileNotFoundError):
