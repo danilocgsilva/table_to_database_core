@@ -17,7 +17,7 @@ class ToDatabase:
         except DriverNotSettedException as e:
             raise MissingDatabaseConfigurationException()
 
-    def set_file(self, file_path: str):
+    def set_excel_file(self, file_path: str):
         self.to_database_core.set_file(file_path)
         
     def set_database_host(self, host: str):
