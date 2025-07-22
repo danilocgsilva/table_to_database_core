@@ -1,12 +1,12 @@
 from pyexcel_ods import save_data
 from datetime import datetime
 
-class TestUtils:    
+class Utils:    
     @staticmethod
     def create_empty_odf_file() -> str:
         # Create an empty dictionary (represents empty sheets)
         data = {}
-        filename = "/tmp/" + TestUtils.generate_friendly_date_string() + ".ods"
+        filename = "/tmp/" + Utils.generate_friendly_date_string() + ".ods"
         save_data(filename, data)
         return filename
         

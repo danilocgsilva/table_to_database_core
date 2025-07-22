@@ -7,11 +7,14 @@ from ..Exceptions.MissingDatabaseConfigurationException import MissingDatabaseCo
 class ToDatabase:
     def __init__(self, to_database_core: ToDatabaseCore):
         self.to_database_core = to_database_core
-        self.database_configuration = MySqlConfiguration()
+        self.database_configuration = None
+        
+    def set_database_configuration(self, database_configuration: MySqlConfiguration):
+        self.database_configuration = database_configuration
+        return self
 
     def to_database(self):
-        database_driver = MySqlDriver()
-        database_driver.set_database_configuration(self.database_configuration)
+        self.to_database_core.set_database_configuration(self.database_configuration)
         try:
             self.to_database_core.to_database()
         except DriverNotSettedException as e:
