@@ -1,1 +1,7 @@
-Convert a database file
+Convert a database file.
+
+Packages required:
+
+* pandas
+* sqlalchemy
+* pymysql
