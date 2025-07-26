@@ -5,11 +5,11 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=[
+        'pyexcel_ods',
+        'ods',
         'pandas',
         'sqlalchemy',
-        'psycopg2-binary',  # For PostgreSQL support
-        'mysql-connector-python',  # For MySQL support
-        'pyodbc',  # For SQL Server support
+        'pymysql'
     ],
     entry_points={
         'console_scripts': [

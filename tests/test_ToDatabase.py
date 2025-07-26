@@ -5,6 +5,7 @@ from table_to_database.ToDatabaseCore import ToDatabaseCore
 from table_to_database.Utils import Utils
 from table_to_database.MySqlConfiguration import MySqlConfiguration
 from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseNotAvailableException
+import os
 
 class test_ToDatabase(unittest.TestCase):
     def setUp(self):
@@ -23,9 +24,9 @@ class test_ToDatabase(unittest.TestCase):
             
     def test_create_database(self):
         database_configuration = MySqlConfiguration()
-        database_configuration.user = "test_user"
-        database_configuration.password = "test_password"
-        database_configuration.host = "localhost"
+        database_configuration.user = os.environ.get("TEST_DB_USER")
+        database_configuration.password = os.environ.get("TEST_DB_PASSWORD")
+        database_configuration.host = os.environ.get("TEST_DB_HOST")
         
         try:
             database_configuration.test_connection()
