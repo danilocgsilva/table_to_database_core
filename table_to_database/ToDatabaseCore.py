@@ -3,30 +3,29 @@ from .Exceptions.MissingDatabaseConfigurationException import MissingDatabaseCon
 import os
 import pandas as pd
 from .Utils import Utils
-from sqlalchemy import create_engine
+from .MySqlConfiguration import MySqlConfiguration
+from .MySqlDriver import MySqlDriver
 
 class ToDatabaseCore(ToDatabaseInterface):
+    file_path: str
+    database_configuration: MySqlConfiguration
+    database_driver: MySqlDriver
     def __init__(self):
         self.file_path = None
-        self.database_driver = None
         self.database_configuration = None
+        self.database_driver = None
         
-    def set_database_configuration(self, database_configuration):
+    def set_database_configuration(self, database_configuration: MySqlConfiguration):
         self.database_configuration = database_configuration
+        self.database_driver = MySqlDriver()
+        self.database_driver.set_database_configuration(database_configuration)
 
-    def to_database(self):
+    def to_database(self, database_name: str = None):
         self._check_for_errors()
-        
-        database_name = "database_" + Utils.generate_friendly_date_string()
+        if database_name:
+            database_name = "database_" + Utils.generate_friendly_date_string()
         
         self._create_database(database_name)
-        
-        # pd.read_excel(self.file_path, engine='openpyxl').to_sql(
-        #     name=table_name,
-        #     con=self.database_configuration.get_connection(),
-        #     if_exists='replace',
-        #     index=False
-        # )
         
     def set_file(self, file_path: str):
         """Set the file path for the table to be converted."""
@@ -44,19 +43,5 @@ class ToDatabaseCore(ToDatabaseInterface):
         
     def _create_database(self, database_name):
         """Create the database if it does not exist."""
-        engine = self.get_engine()
-        with engine.connect() as connection:
-            connection.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
-        
-    def get_engine(self):
-        """Get the SQLAlchemy engine for the database."""
-        if self.database_configuration is None:
-            raise MissingDatabaseConfigurationException()
-        
-        db_user = self.database_configuration.get_user()
-        db_password = self.database_configuration.get_password()
-        db_host = self.database_configuration.get_host()
-        db_port = self.database_configuration.get_port()
-        
-        return create_engine(f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/")
+        self.database_driver.exec(f"CREATE DATABASE IF NOT EXISTS {database_name};")
         

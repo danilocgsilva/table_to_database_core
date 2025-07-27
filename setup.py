@@ -8,8 +8,9 @@ setup(
         'pyexcel_ods',
         'ods',
         'pandas',
-        'sqlalchemy',
-        'pymysql'
+        'pymysql',
+        'mysql-connector-python',
+        'sqlalchemy'
     ],
     entry_points={
         'console_scripts': [

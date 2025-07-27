@@ -15,4 +15,4 @@ class Utils:
         """
         Generates a friendly date string for testing purposes.
         """
-        return datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        return datetime.now().strftime("%Y_%m_%d_%H%M%S")
