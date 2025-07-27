@@ -3,6 +3,7 @@ from ..MySqlConfiguration import MySqlConfiguration
 from ..MySqlDriver import MySqlDriver
 from ..Exceptions.DriverNotSettedException import DriverNotSettedException
 from ..Exceptions.MissingDatabaseConfigurationException import MissingDatabaseConfigurationException
+from ..SqlWritterFromExcel import SqlWritterFromExcel
 
 class ToDatabase:
     to_database_core: ToDatabaseCore
@@ -21,6 +22,7 @@ class ToDatabase:
             self.to_database_core.to_database(database_name)
         except DriverNotSettedException as e:
             raise MissingDatabaseConfigurationException()
+        self.to_database_core.to_database()
 
     def set_excel_file(self, file_path: str):
         self.to_database_core.set_file(file_path)

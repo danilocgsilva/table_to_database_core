@@ -10,7 +10,8 @@ setup(
         'pandas',
         'pymysql',
         'mysql-connector-python',
-        'sqlalchemy'
+        'sqlalchemy',
+        'cryptography'
     ],
     entry_points={
         'console_scripts': [

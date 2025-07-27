@@ -5,11 +5,13 @@ import pandas as pd
 from .Utils import Utils
 from .MySqlConfiguration import MySqlConfiguration
 from .MySqlDriver import MySqlDriver
+from .SqlWritterFromExcel import SqlWritterFromExcel
 
 class ToDatabaseCore(ToDatabaseInterface):
     file_path: str
     database_configuration: MySqlConfiguration
     database_driver: MySqlDriver
+    database_name: str
     def __init__(self):
         self.file_path = None
         self.database_configuration = None
@@ -24,12 +26,19 @@ class ToDatabaseCore(ToDatabaseInterface):
         self._check_for_errors()
         if database_name:
             database_name = "database_" + Utils.generate_friendly_date_string()
-        
+            self.database_name = database_name
         self._create_database(database_name)
         
     def set_file(self, file_path: str):
         """Set the file path for the table to be converted."""
         self.file_path = file_path
+        
+    # def write_to_database(self):
+    #     sqlWritterFromExcel = SqlWritterFromExcel(self.database_configuration)
+    #     # print("-------")
+    #     # print(self.file_path)
+    #     # print("-------")
+    #     sqlWritterFromExcel.write(self.database_name, self.file_path)
         
     def _check_for_errors(self):
         if not self.file_path:

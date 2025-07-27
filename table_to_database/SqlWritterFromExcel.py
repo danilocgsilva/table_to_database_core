@@ -21,7 +21,7 @@ class SqlWritterFromExcel:
             index=False
         )
         
-    def __getstate__(self, database_name: str):
+    def get_engine(self, database_name: str):
         return create_engine(
             f"mysql+mysqlconnector://{self.mysql_connection.user}:"
             f"{self.mysql_connection.password}@"

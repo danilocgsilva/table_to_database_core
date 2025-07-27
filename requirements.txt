@@ -1,6 +1,7 @@
-pyexcel_ods
+cryptography
+mysql-connector-python
 ods
 pandas
+pyexcel_ods
 pymysql
-mysql-connector-python
 sqlalchemy

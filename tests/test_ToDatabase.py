@@ -7,6 +7,7 @@ from table_to_database.MySqlConfiguration import MySqlConfiguration
 from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseNotAvailableException
 import os
 from table_to_database.MySqlDriver import MySqlDriver
+from collections import OrderedDict
 
 class test_ToDatabase(unittest.TestCase):
     def setUp(self):
@@ -24,16 +25,26 @@ class test_ToDatabase(unittest.TestCase):
             self.toDatabase.to_database()
             
     def test_create_database(self):
-        database_configuration = MySqlConfiguration()
-        database_configuration.user = os.environ.get("TEST_DB_USER")
-        database_configuration.password = os.environ.get("TEST_DB_PASSWORD")
-        database_configuration.host = os.environ.get("TEST_DB_HOST")
+        database_configuration = self._getDatabaseConfiguration()
+        self._test_database_connection(database_configuration)
         
-        try:
-            database_configuration.test_connection()
-        except DatabaseNotAvailableException:
-            raise Exception("Tests can't proceed. Please, have a test database available...")
+        ods_file_name = Utils.create_empty_odf_file()
         
+        self.toDatabase.set_excel_file(ods_file_name)
+        self.toDatabase.set_database_configuration(database_configuration)
+        
+        database_name = Utils.generate_friendly_date_string()
+        
+        self.toDatabase.to_database(database_name)
+        
+        self.assertTrue(self._databaseExists(database_name), f"Database {database_name} should exist after creation.")
+        
+    def test_create_one_row(self):
+        database_configuration = self._getDatabaseConfiguration()
+        self._test_database_connection(database_configuration)
+        
+        data = OrderedDict()
+        data.update({"Sheet1": [[1, 2, 3]]}) 
         ods_file_name = Utils.create_empty_odf_file()
         
         self.toDatabase.set_excel_file(ods_file_name)
@@ -42,7 +53,13 @@ class test_ToDatabase(unittest.TestCase):
         database_name = Utils.generate_friendly_date_string()
         self.toDatabase.to_database(database_name)
         
-        self.assertTrue(self._databaseExists(database_name), f"Database {database_name} should exist after creation.")
+        self.assertTrue(self._databaseExists(database_name), f"Database {database_name} should exist after adding one row.")
+        
+    def _test_database_connection(self, database_configuration):
+        try:
+            database_configuration.test_connection()
+        except DatabaseNotAvailableException:
+            raise Exception("Tests can't proceed. Please, have a test database available...")
         
     def _databaseExists(self, database_name: str) -> bool:
         """Check if the database exists."""
