@@ -28,17 +28,20 @@ class ToDatabaseCore(ToDatabaseInterface):
             database_name = "database_" + Utils.generate_friendly_date_string()
             self.database_name = database_name
         self._create_database(database_name)
+        table_name = "Sheet1"
+        self._write_to_database(database_name, table_name)
         
     def set_file(self, file_path: str):
         """Set the file path for the table to be converted."""
         self.file_path = file_path
         
-    # def write_to_database(self):
-    #     sqlWritterFromExcel = SqlWritterFromExcel(self.database_configuration)
-    #     # print("-------")
-    #     # print(self.file_path)
-    #     # print("-------")
-    #     sqlWritterFromExcel.write(self.database_name, self.file_path)
+    def _write_to_database(self, database_name: str, table_name: str):
+        """Write the data from the file to the database."""
+        if not self.file_path or not os.path.isfile(self.file_path):
+            raise FileNotFoundError(f"The file {self.file_path} does not exist.")
+        
+        sql_writer = SqlWritterFromExcel(self.database_configuration)
+        sql_writer.write(database_name, self.file_path)
         
     def _check_for_errors(self):
         if not self.file_path:

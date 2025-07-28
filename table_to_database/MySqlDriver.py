@@ -4,23 +4,31 @@ import mysql.connector
 class MySqlDriver:
     def __init__(self):
         self.mysql_configuration = None
+        self.connection = None
     
     def set_database_configuration(self, mysql_configuration: MySqlConfiguration):
         """Set the MySQL database configuration."""
         self.mysql_configuration = mysql_configuration
         
-    def exec(self, query: str):
-        """Execute a SQL query on the MySQL database."""
-        self._check_mysql_configuration()
-        
-        connection = mysql.connector.connect(
+    def connect(self):
+        self.connection = mysql.connector.connect(
             host=self.mysql_configuration.host,
             user=self.mysql_configuration.user,
             password=self.mysql_configuration.password
         )
-        myresult = self._run_query(query, connection)
-        connection.close()
+        
+    def exec(self, query: str):
+        """Execute a SQL query on the MySQL database."""
+        self._check_mysql_configuration()
+        
+        if self.connection is None:
+            self.connect()
+        
+        myresult = self._run_query(query, self.connection)
         return myresult
+    
+    def close_connection(self):
+        self.connection.close()
     
     def exec_with_connection(self, query: str, connection):
         """Execute a SQL query with an existing connection."""

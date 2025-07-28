@@ -3,13 +3,6 @@ from datetime import datetime
 from collections import OrderedDict 
 
 class Utils:    
-    @staticmethod
-    def create_empty_odf_file(prefix = "") -> str:
-        data = {}
-        filename = prefix + Utils.generate_friendly_date_string() + ".ods"
-        save_data(filename, data)
-        return filename
-    
     def create_ods_file_with_order_dict(self, order_dict: OrderedDict) -> str:
         """
         Creates an ODS file with the provided order dictionary.
