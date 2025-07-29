@@ -14,7 +14,6 @@ class SqlWritterFromExcel:
         table_name = "datasheet"
         
         df = pd.read_excel(table_file_path, engine='odf')
-        # df.columns = [col.lower() for col in df.columns]
         
         df.to_sql(
             table_name,
@@ -28,11 +27,7 @@ class SqlWritterFromExcel:
         string_for_connection = (
             f"mysql+mysqlconnector://{self.mysql_connection.user}:"
             f"{self.mysql_connection.password}@"
-            f"{self.mysql_connection.host}/:3306/{database_name}"
+            f"{self.mysql_connection.host}:3306/{database_name}"
         )
-        
-        # print("-----")
-        # print(string_for_connection)
-        # print("-----")
         
         return create_engine(string_for_connection)
