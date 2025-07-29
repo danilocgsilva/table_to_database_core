@@ -27,7 +27,7 @@ class ToDatabaseCore(ToDatabaseInterface):
         if database_name:
             database_name = "database_" + Utils.generate_friendly_date_string()
             self.database_name = database_name
-        self._create_database(database_name)
+        Utils.create_database(database_name, self.database_driver)
         table_name = "Sheet1"
         self._write_to_database(database_name, table_name)
         
@@ -53,7 +53,7 @@ class ToDatabaseCore(ToDatabaseInterface):
         if self.database_configuration is None:
             raise MissingDatabaseConfigurationException()
         
-    def _create_database(self, database_name):
-        """Create the database if it does not exist."""
-        self.database_driver.exec(f"CREATE DATABASE IF NOT EXISTS {database_name};")
+    # def _create_database(self, database_name):
+    #     """Create the database if it does not exist."""
+    #     self.database_driver.exec(f"CREATE DATABASE IF NOT EXISTS {database_name};")
         

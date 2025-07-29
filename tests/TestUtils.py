@@ -11,6 +11,8 @@ class TestUtils:
         database_configuration.database = os.environ.get("TEST_DB_NAME")
         database_configuration.user = os.environ.get("TEST_DB_USER")
         database_configuration.password = os.environ.get("TEST_DB_PASSWORD")
+        database_configuration.host = os.environ.get("TEST_DB_HOST")
+        return database_configuration
         
         
     @staticmethod

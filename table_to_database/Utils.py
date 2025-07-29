@@ -17,3 +17,8 @@ class Utils:
         Generates a friendly date string for testing purposes.
         """
         return datetime.now().strftime("%Y_%m_%d_%H%M%S")
+    
+    @staticmethod
+    def create_database(database_name, database_driver):
+        """Create the database if it does not exist."""
+        database_driver.exec(f"CREATE DATABASE IF NOT EXISTS {database_name};")

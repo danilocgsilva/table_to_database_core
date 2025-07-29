@@ -9,6 +9,7 @@ class MySqlDriver:
     def set_database_configuration(self, mysql_configuration: MySqlConfiguration):
         """Set the MySQL database configuration."""
         self.mysql_configuration = mysql_configuration
+        return self
         
     def connect(self):
         self.connection = mysql.connector.connect(
