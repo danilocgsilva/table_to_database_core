@@ -8,6 +8,7 @@ from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseN
 from table_to_database.MySqlDriver import MySqlDriver
 from collections import OrderedDict
 from .TestUtils import TestUtils
+from pyexcel_ods import save_data
 
 class test_ToDatabase(unittest.TestCase):
     def setUp(self):
@@ -15,44 +16,39 @@ class test_ToDatabase(unittest.TestCase):
         
     def test_set_not_existing_file(self):
         with self.assertRaises(FileNotFoundError):
-            self.toDatabase.set_excel_file("path/to/non_existent_file.txt")
-            self.toDatabase.to_database()
+            self.toDatabase.to_database("not_existing_file.ods")
             
     def test_excepts_if_database_configuration_not_setted(self):
-        ods_file_name = Utils.create_empty_odf_file()
+        ods_file_name = TestUtils.create_empty_odf_file()
         with self.assertRaises(MissingDatabaseConfigurationException):
-            self.toDatabase.set_excel_file(ods_file_name)
-            self.toDatabase.to_database()
+            self.toDatabase.to_database(ods_file_name)
             
     def test_create_database(self):
-        # database_configuration = self._getDatabaseConfiguration()
         database_configuration = TestUtils.get_test_db_configuration()
         self._test_database_connection(database_configuration)
         
         ods_file_name = TestUtils.create_empty_odf_file()
         
-        self.toDatabase.set_excel_file(ods_file_name)
         self.toDatabase.set_database_configuration(database_configuration)
         
         database_name = Utils.generate_friendly_date_string()
         
-        self.toDatabase.to_database(database_name)
+        self.toDatabase.to_database(database_name, ods_file_name)
         
         self.assertTrue(self._databaseExists(database_name), f"Database {database_name} should exist after creation.")
         
     def test_create_one_row(self):
-        # database_configuration = self._getDatabaseConfiguration()
         database_configuration = TestUtils.get_test_db_configuration()
         self._test_database_connection(database_configuration)
         
-        data = OrderedDict()
-        data.update({"Sheet1": [[1, 2, 3]]}) 
-        ods_file_name = TestUtils.create_empty_odf_file()
+        data_create_table_one_row = [['column1', 'column2', 'column3'], [1, 2, 3]]
+        table_file_name = self._create_ods(data_create_table_one_row)
         
-        self.toDatabase.set_excel_file(ods_file_name)
+        
         self.toDatabase.set_database_configuration(database_configuration)
         
         database_name = Utils.generate_friendly_date_string()
+        
         self.toDatabase.to_database(database_name)
         
         registers_count = self._count_registers(database_name, table_name)
@@ -90,3 +86,11 @@ class test_ToDatabase(unittest.TestCase):
             return result[0][0]
         except Exception as e:
             print(f"Error counting registers: {e}")
+    
+    def _create_ods(self, data_from_list):
+        file_name_path = "generic_table_file_" + Utils.generate_friendly_date_string() + ".ods"
+        order_dict = OrderedDict()
+        order_dict.update({"Sheet 1": data_from_list})
+        save_data(file_name_path, order_dict)
+        return file_name_path
+

@@ -13,6 +13,7 @@ class test_SqlWritterFromExcel(unittest.TestCase):
         odsFilePathString = TestUtils.create_empty_odf_file()
         database_name = "database_" + Utils.generate_friendly_date_string()
         sqlWritterFromExcel.write(database_name, odsFilePathString)
+        self._dropDatabase(database_name)
         
     def test_write_three_line(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
@@ -34,4 +35,5 @@ class test_SqlWritterFromExcel(unittest.TestCase):
         save_data(ods_file_name_path, ordered_dict)
         return ods_file_name_path
         
+    def _dropDatabase(self, database_name):
         

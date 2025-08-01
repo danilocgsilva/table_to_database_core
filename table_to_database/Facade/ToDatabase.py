@@ -16,7 +16,8 @@ class ToDatabase:
         self.database_configuration = database_configuration
         return self
 
-    def to_database(self, database_name: str = None):
+    def to_database(self, excel_file_path: str, database_name: str = None):
+        self.to_database_core.set_file(excel_file_path)
         self.to_database_core.set_database_configuration(self.database_configuration)
         try:
             self.to_database_core.to_database(database_name)
@@ -24,8 +25,8 @@ class ToDatabase:
             raise MissingDatabaseConfigurationException()
         self.to_database_core.to_database()
 
-    def set_excel_file(self, file_path: str):
-        self.to_database_core.set_file(file_path)
+    # def set_excel_file(self, file_path: str):
+    #     self.to_database_core.set_file(file_path)
         
     def set_database_host(self, host: str):
         """Set the database host."""
