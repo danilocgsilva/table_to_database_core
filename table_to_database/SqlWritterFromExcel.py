@@ -1,6 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine, text
 from .MySqlConfiguration import MySqlConfiguration
+from .CreationResult import CreationResult
 
 class SqlWritterFromExcel:
     mysql_connection: MySqlConfiguration
@@ -21,9 +22,10 @@ class SqlWritterFromExcel:
             if_exists='replace',
             index=False
         )
+
+        return CreationResult(True, [table_name], database_name)
         
     def get_engine(self, database_name: str):
-        
         string_for_connection = (
             f"mysql+mysqlconnector://{self.mysql_connection.user}:"
             f"{self.mysql_connection.password}@"

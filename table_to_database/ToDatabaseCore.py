@@ -23,18 +23,16 @@ class ToDatabaseCore(ToDatabaseInterface):
         self.database_driver = MySqlDriver()
         self.database_driver.set_database_configuration(database_configuration)
 
-    def to_database(self, database_name: str = None) -> CreationResult :
+    def to_database(self, database_name: str = None) -> CreationResult:
         self._check_for_errors()
         if database_name:
             database_name = "database_" + Utils.generate_friendly_date_string()
             self.database_name = database_name
         Utils.create_database(database_name, self.database_driver)
         table_name = "Sheet1"
-        self._write_to_database(database_name, table_name)
-        result = CreationResult(True, [table_name], database_name)
-        return result
-        
-    def set_file(self, file_path: str):
+        return self._write_to_database(database_name, table_name)
+
+    def set_file(self, file_path: str) -> CreationResult:
         """Set the file path for the table to be converted."""
         self.file_path = file_path
         
@@ -44,7 +42,7 @@ class ToDatabaseCore(ToDatabaseInterface):
             raise FileNotFoundError(f"The file {self.file_path} does not exist.")
         
         sql_writer = SqlWritterFromExcel(self.database_configuration)
-        sql_writer.write(database_name, self.file_path)
+        return sql_writer.write(database_name, self.file_path)
         
     def _check_for_errors(self):
         if not self.file_path:

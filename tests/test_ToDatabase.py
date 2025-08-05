@@ -40,9 +40,8 @@ class test_ToDatabase(unittest.TestCase):
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = "database_" + Utils.generate_friendly_date_string()
         results = self.toDatabase.to_database(table_file_name, database_name)
-        table_name = "Sheet1"
-        registers_count = self._count_registers(database_name, table_name)
-        self.assertCountEqual(1, registers_count, f"Database {database_name} should contain exactly one row after adding one row.")
+        registers_count = self._count_registers(database_name, results.tables_created[0])
+        self.assertEqual(1, registers_count, f"Database {database_name} should contain exactly one row after adding one row.")
         
     def _database_connection(self, database_configuration):
         try:
@@ -53,7 +52,6 @@ class test_ToDatabase(unittest.TestCase):
     def _databaseExists(self, database_name: str) -> bool:
         """Check if the database exists."""
         mysql_driver = MySqlDriver()
-        # mysql_driver.set_database_configuration(self._getDatabaseConfiguration())
         mysql_driver.set_database_configuration(TestUtils.get_test_db_configuration())
         try:
             result = mysql_driver.exec(f"SHOW DATABASES LIKE '%{database_name}%'")
@@ -62,16 +60,17 @@ class test_ToDatabase(unittest.TestCase):
             print(f"Error checking database existence: {e}")
             return False
     
-    def _count_registers(self, database_name: str, table_name):
+    def _count_registers(self, database_name: str, table_name) -> int:
         """Count the number of registers in the database."""
         mysql_driver = MySqlDriver()
-        # mysql_driver.set_database_configuration(self._getDatabaseConfiguration())
         mysql_driver.set_database_configuration(TestUtils.get_test_db_configuration())
+
+        mysql_driver.exec(f"USE {database_name};")
         
         try:
             result = mysql_driver.exec(f"SELECT COUNT(*) FROM {table_name};")
-            result = result[0][0]
-            return result
+            counting = result[0][0]
+            return int(counting)
         except Exception as e:
             print(f"Error counting registers: {e}")
     
