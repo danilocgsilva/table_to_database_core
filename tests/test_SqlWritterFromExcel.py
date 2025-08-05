@@ -35,5 +35,5 @@ class test_SqlWritterFromExcel(unittest.TestCase):
         save_data(ods_file_name_path, ordered_dict)
         return ods_file_name_path
         
-    def _dropDatabase(self, database_name):
+    # def _dropDatabase(self, database_name):
         

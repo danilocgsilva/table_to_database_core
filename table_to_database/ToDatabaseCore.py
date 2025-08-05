@@ -6,6 +6,7 @@ from .Utils import Utils
 from .MySqlConfiguration import MySqlConfiguration
 from .MySqlDriver import MySqlDriver
 from .SqlWritterFromExcel import SqlWritterFromExcel
+from .CreationResult import CreationResult
 
 class ToDatabaseCore(ToDatabaseInterface):
     file_path: str
@@ -22,7 +23,7 @@ class ToDatabaseCore(ToDatabaseInterface):
         self.database_driver = MySqlDriver()
         self.database_driver.set_database_configuration(database_configuration)
 
-    def to_database(self, database_name: str = None):
+    def to_database(self, database_name: str = None) -> CreationResult :
         self._check_for_errors()
         if database_name:
             database_name = "database_" + Utils.generate_friendly_date_string()
@@ -30,6 +31,8 @@ class ToDatabaseCore(ToDatabaseInterface):
         Utils.create_database(database_name, self.database_driver)
         table_name = "Sheet1"
         self._write_to_database(database_name, table_name)
+        result = CreationResult(True, [table_name], database_name)
+        return result
         
     def set_file(self, file_path: str):
         """Set the file path for the table to be converted."""
