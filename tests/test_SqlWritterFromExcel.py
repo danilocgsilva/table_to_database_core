@@ -5,15 +5,33 @@ from table_to_database.MySqlDriver import MySqlDriver
 from table_to_database.Utils import Utils
 from collections import OrderedDict
 from pyexcel_ods import save_data
+from .TestTrait import TestTrait
+from table_to_database.Exceptions.DatabaseNotExistsException import DatabaseNotExistsException
 
-class test_SqlWritterFromExcel(unittest.TestCase):
+class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
+    def test_raise_database_not_exists(self):
+        mySqlConfiguration = TestUtils.get_test_db_configuration()
+        sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
+        data_table = [
+            ['column1', 'column2', 'column3'],
+            [1, 2, 3]
+        ]
+        odsFilePathString = TestUtils.create_ods_with_data(data_table, "ods_")
+        with self.assertRaises(DatabaseNotExistsException):
+            sqlWritterFromExcel.write("some_database", odsFilePathString)
+    
     def test_write_one_line(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
         sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
-        odsFilePathString = TestUtils.create_empty_odf_file()
+        data_table = [
+            ['column1', 'column2', 'column3'],
+            [1, 2, 3]
+        ]
+        odsFilePathString = TestUtils.create_ods_with_data(data_table, "ods_")
         database_name = "database_" + Utils.generate_friendly_date_string()
-        sqlWritterFromExcel.write(database_name, odsFilePathString)
-        self._dropDatabase(database_name)
+        results = sqlWritterFromExcel.write(database_name, odsFilePathString)
+        created_rows = self._count_registers(results.database_created, results.tables_created[0])
+        self.assertEqual(created_rows, 1)
         
     def test_write_three_line(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
@@ -35,5 +53,4 @@ class test_SqlWritterFromExcel(unittest.TestCase):
         save_data(ods_file_name_path, ordered_dict)
         return ods_file_name_path
         
-    # def _dropDatabase(self, database_name):
         

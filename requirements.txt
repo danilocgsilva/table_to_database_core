@@ -5,3 +5,4 @@ pandas
 pyexcel_ods
 pymysql
 sqlalchemy
+pandas

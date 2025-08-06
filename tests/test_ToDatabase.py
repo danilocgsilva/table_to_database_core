@@ -8,9 +8,10 @@ from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseN
 from table_to_database.MySqlDriver import MySqlDriver
 from collections import OrderedDict
 from .TestUtils import TestUtils
+from .TestTrait import TestTrait
 from pyexcel_ods import save_data
 
-class test_ToDatabase(unittest.TestCase):
+class test_ToDatabase(unittest.TestCase, TestTrait):
     def setUp(self):
         self.toDatabase = ToDatabase(ToDatabaseCore())
         
@@ -30,7 +31,7 @@ class test_ToDatabase(unittest.TestCase):
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = Utils.generate_friendly_date_string()
         self.toDatabase.to_database(database_name, ods_file_name)
-        self.assertTrue(self._databaseExists(database_name), f"Database {database_name} should exist after creation.")
+        self.assertTrue(Utils.databaseExists(database_name, TestUtils.get_test_db_configuration()), f"Database {database_name} should exist after creation.")
         
     def test_create_one_row(self):
         database_configuration = TestUtils.get_test_db_configuration()
@@ -48,31 +49,6 @@ class test_ToDatabase(unittest.TestCase):
             database_configuration.test_connection()
         except DatabaseNotAvailableException:
             raise Exception("Tests can't proceed. Please, have a test database available...")
-        
-    def _databaseExists(self, database_name: str) -> bool:
-        """Check if the database exists."""
-        mysql_driver = MySqlDriver()
-        mysql_driver.set_database_configuration(TestUtils.get_test_db_configuration())
-        try:
-            result = mysql_driver.exec(f"SHOW DATABASES LIKE '%{database_name}%'")
-            return result.__len__() > 0
-        except Exception as e:
-            print(f"Error checking database existence: {e}")
-            return False
-    
-    def _count_registers(self, database_name: str, table_name) -> int:
-        """Count the number of registers in the database."""
-        mysql_driver = MySqlDriver()
-        mysql_driver.set_database_configuration(TestUtils.get_test_db_configuration())
-
-        mysql_driver.exec(f"USE {database_name};")
-        
-        try:
-            result = mysql_driver.exec(f"SELECT COUNT(*) FROM {table_name};")
-            counting = result[0][0]
-            return int(counting)
-        except Exception as e:
-            print(f"Error counting registers: {e}")
     
     def _create_ods(self, data_from_list):
         file_name_path = "generic_table_file_" + Utils.generate_friendly_date_string() + ".ods"

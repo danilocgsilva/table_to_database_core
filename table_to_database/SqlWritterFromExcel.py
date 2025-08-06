@@ -2,6 +2,9 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from .MySqlConfiguration import MySqlConfiguration
 from .CreationResult import CreationResult
+from .Exceptions.DatabaseNotExistsException import DatabaseNotExistsException
+from .Utils import Utils
+from table_to_database.MySqlDriver import MySqlDriver
 
 class SqlWritterFromExcel:
     mysql_connection: MySqlConfiguration
@@ -12,10 +15,12 @@ class SqlWritterFromExcel:
 
     def write(self, database_name: str, table_file_path: str):
         """Write data to the database."""
+        
+        if Utils.databaseExists(database_name, self.mysql_connection) == False:
+            raise DatabaseNotExistsException()
+        
         table_name = "datasheet"
-        
         df = pd.read_excel(table_file_path, engine='odf')
-        
         df.to_sql(
             table_name,
             con=self.get_engine(database_name),

@@ -25,7 +25,7 @@ class ToDatabaseCore(ToDatabaseInterface):
 
     def to_database(self, database_name: str = None) -> CreationResult:
         self._check_for_errors()
-        if database_name:
+        if not database_name:
             database_name = "database_" + Utils.generate_friendly_date_string()
             self.database_name = database_name
         Utils.create_database(database_name, self.database_driver)
