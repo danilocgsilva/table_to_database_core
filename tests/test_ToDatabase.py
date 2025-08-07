@@ -10,6 +10,7 @@ from collections import OrderedDict
 from .TestUtils import TestUtils
 from .TestTrait import TestTrait
 from pyexcel_ods import save_data
+import os
 
 class test_ToDatabase(unittest.TestCase, TestTrait):
     def setUp(self):
@@ -33,6 +34,7 @@ class test_ToDatabase(unittest.TestCase, TestTrait):
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = Utils.generate_friendly_date_string()
         results = self.toDatabase.to_database(ods_file_name, database_name)
+        os.remove(ods_file_name)
         self.assertTrue(Utils.databaseExists(results.database_created, TestUtils.get_test_db_configuration()), f"Database {database_name} should exist after creation.")
         
     def test_create_one_row(self):
@@ -43,6 +45,7 @@ class test_ToDatabase(unittest.TestCase, TestTrait):
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = "database_" + Utils.generate_friendly_date_string()
         results = self.toDatabase.to_database(table_file_name, database_name)
+        os.remove(table_file_name)
         registers_count = self._count_registers(database_name, results.tables_created[0])
         self.assertEqual(1, registers_count, f"Database {database_name} should contain exactly one row after adding one row.")
         

@@ -7,6 +7,7 @@ from collections import OrderedDict
 from pyexcel_ods import save_data
 from .TestTrait import TestTrait
 from table_to_database.Exceptions.DatabaseNotExistsException import DatabaseNotExistsException
+import os
 
 class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
     def setUp(self):
@@ -36,7 +37,9 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
         
         Utils.create_database(database_name, self.mySqlDriver)
         results = sqlWritterFromExcel.write(database_name, odsFilePathString)
+        os.remove(odsFilePathString)
         created_rows = self._count_registers(results.database_created, results.tables_created[0])
+        
         self.assertEqual(created_rows, 1)
         
     def test_write_three_line(self):
@@ -48,6 +51,7 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
         database_name = "database_" + Utils.generate_friendly_date_string()
         Utils.create_database(database_name, self.mySqlDriver)
         sqlWritterFromExcel.write(database_name, odsFilePathString)
+        os.remove(odsFilePathString)
         
     def _create_ods(self):
         ods_file_name_path = Utils.generate_friendly_date_string() + ".ods"
