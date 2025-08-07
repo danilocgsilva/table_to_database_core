@@ -26,12 +26,14 @@ class test_ToDatabase(unittest.TestCase, TestTrait):
             
     def test_create_database(self):
         database_configuration = TestUtils.get_test_db_configuration()
-        self._test_database_connection(database_configuration)
-        ods_file_name = TestUtils.create_empty_odf_file()
+        
+        data_create_table_one_row = [['column1', 'column2', 'column3'], [1, 2, 3]]
+        ods_file_name = self._create_ods(data_create_table_one_row)
+        
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = Utils.generate_friendly_date_string()
-        self.toDatabase.to_database(database_name, ods_file_name)
-        self.assertTrue(Utils.databaseExists(database_name, TestUtils.get_test_db_configuration()), f"Database {database_name} should exist after creation.")
+        results = self.toDatabase.to_database(ods_file_name, database_name)
+        self.assertTrue(Utils.databaseExists(results.database_created, TestUtils.get_test_db_configuration()), f"Database {database_name} should exist after creation.")
         
     def test_create_one_row(self):
         database_configuration = TestUtils.get_test_db_configuration()

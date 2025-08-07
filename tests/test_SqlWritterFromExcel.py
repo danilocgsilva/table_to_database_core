@@ -9,6 +9,10 @@ from .TestTrait import TestTrait
 from table_to_database.Exceptions.DatabaseNotExistsException import DatabaseNotExistsException
 
 class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
+    def setUp(self):
+        self.mySqlDriver = MySqlDriver()
+        self.mySqlDriver.set_database_configuration(TestUtils.get_test_db_configuration())
+    
     def test_raise_database_not_exists(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
         sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
@@ -29,6 +33,8 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
         ]
         odsFilePathString = TestUtils.create_ods_with_data(data_table, "ods_")
         database_name = "database_" + Utils.generate_friendly_date_string()
+        
+        Utils.create_database(database_name, self.mySqlDriver)
         results = sqlWritterFromExcel.write(database_name, odsFilePathString)
         created_rows = self._count_registers(results.database_created, results.tables_created[0])
         self.assertEqual(created_rows, 1)
@@ -36,14 +42,11 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
     def test_write_three_line(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
         
-        mySqlDriver = MySqlDriver()
-        mySqlDriver.set_database_configuration(mySqlConfiguration)
-        
         sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
         
         odsFilePathString = self._create_ods()
         database_name = "database_" + Utils.generate_friendly_date_string()
-        Utils.create_database(database_name, mySqlDriver)
+        Utils.create_database(database_name, self.mySqlDriver)
         sqlWritterFromExcel.write(database_name, odsFilePathString)
         
     def _create_ods(self):
