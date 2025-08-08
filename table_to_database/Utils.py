@@ -26,6 +26,11 @@ class Utils:
         database_driver.exec(f"CREATE DATABASE IF NOT EXISTS {database_name};")
         
     @staticmethod
+    def drop_database(database_name, database_driver):
+        """Drop the database if it exists."""
+        database_driver.exec(f"DROP DATABASE IF EXISTS {database_name};")
+        
+    @staticmethod
     def databaseExists(database_name: str, databaseConfiguration: MySqlConfiguration) -> bool:
         """Check if the database exists."""
         mysql_driver = MySqlDriver()

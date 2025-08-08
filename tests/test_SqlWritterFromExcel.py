@@ -8,13 +8,19 @@ from pyexcel_ods import save_data
 from .TestTrait import TestTrait
 from table_to_database.Exceptions.DatabaseNotExistsException import DatabaseNotExistsException
 import os
+from .TearDownMethods import TearDownMethods
 
-class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
+class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
     def setUp(self):
         self.mySqlDriver = MySqlDriver()
         self.mySqlDriver.set_database_configuration(TestUtils.get_test_db_configuration())
+        self.generatedOds = None
+        self.generatedDatabase = None
+        
+    def tearDown(self):
+        self._tearDown()
     
-    def test_raise_database_not_exists(self):
+    def test_raise_exception_if_database_not_exists(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
         sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
         data_table = [
@@ -22,6 +28,7 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
             [1, 2, 3]
         ]
         odsFilePathString = TestUtils.create_ods_with_data(data_table, "ods_")
+        self.generatedOds = odsFilePathString
         with self.assertRaises(DatabaseNotExistsException):
             sqlWritterFromExcel.write("some_database", odsFilePathString)
     
@@ -34,22 +41,20 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait):
         ]
         odsFilePathString = TestUtils.create_ods_with_data(data_table, "ods_")
         database_name = "database_" + Utils.generate_friendly_date_string()
-        
         Utils.create_database(database_name, self.mySqlDriver)
+        self.generatedDatabase = database_name
         results = sqlWritterFromExcel.write(database_name, odsFilePathString)
         os.remove(odsFilePathString)
         created_rows = self._count_registers(results.database_created, results.tables_created[0])
-        
         self.assertEqual(created_rows, 1)
         
     def test_write_three_line(self):
         mySqlConfiguration = TestUtils.get_test_db_configuration()
-        
         sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
-        
         odsFilePathString = self._create_ods()
         database_name = "database_" + Utils.generate_friendly_date_string()
         Utils.create_database(database_name, self.mySqlDriver)
+        self.generatedDatabase = database_name
         sqlWritterFromExcel.write(database_name, odsFilePathString)
         os.remove(odsFilePathString)
         
