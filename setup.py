@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='table_to_database',
-    version='0.1',
+    version='1.0',
     packages=find_packages(),
     install_requires=[
         'pyexcel_ods',
@@ -13,11 +13,6 @@ setup(
         'sqlalchemy',
         'cryptography'
     ],
-    entry_points={
-        'console_scripts': [
-            'table_to_database=table_to_database.main:main',
-        ],
-    },
     author='Danilo Silva',
     description='A package for converting table files to database formats.',
     long_description=open('README.md').read(),
@@ -30,5 +25,5 @@ setup(
     ],
     python_requires='>=3.6',
     license='MIT',
-    keywords='database, table, conversion, sqlalchemy, pandas',
+    keywords='database, table, conversion',
 )
