@@ -61,11 +61,9 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         self.generatedDatabase = "database_" + Utils.generate_friendly_date_string()
 
         Utils.create_database(self.generatedDatabase, self.mySqlDriver)
-        print("@" + self.generatedDatabase + "@")
 
         data_to_create_table = [[1,2,3],[4,5,6],[7,8,9]]
         created_ods = self._create_ods_with_data(data_to_create_table, table1_name)
-        print(created_ods)
 
         sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
         sqlWritterFromExcel.write(self.generatedDatabase, created_ods)
@@ -77,9 +75,9 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         return self._create_ods_with_data(data_to_create_table)
 
     def _check_table_exists(self, table_name, database_name):
-        mysql_driver = MySqlDriver()
-        mysql_driver.exec(f"USE {database_name}")
-        query_list_tables = f"SHOW TABLES LIKE 'table_name';"
+        self.mySqlDriver.exec(f"USE {database_name}")
+        query_list_tables = f"SHOW TABLES LIKE '{table_name}';"
+        results = self.mySqlDriver.exec(query_list_tables)
 
-        return False
+        return len(results) > 0
 

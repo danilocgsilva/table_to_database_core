@@ -26,7 +26,7 @@ class TestUtils:
     def create_ods_with_data(data, prefix="") -> str:
         filename = prefix + Utils.generate_friendly_date_string() + ".ods"
         order_dict = OrderedDict()
-        order_dict.update({"Sheet 1": data})
+        order_dict.update({"Sheet_1": data})
         save_data(filename, order_dict)
         return filename
     

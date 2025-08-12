@@ -19,16 +19,16 @@ class SqlWritterFromExcel:
         if Utils.databaseExists(database_name, self.mysql_connection) == False:
             raise DatabaseNotExistsException()
         
-        table_name = "datasheet"
+        sheet_name = self._getSheetName(table_file_path)
         df = pd.read_excel(table_file_path, engine='odf')
         df.to_sql(
-            table_name,
+            sheet_name,
             con=self.get_engine(database_name),
             if_exists='replace',
             index=False
         )
 
-        return CreationResult(True, [table_name], database_name)
+        return CreationResult(True, [sheet_name], database_name)
         
     def get_engine(self, database_name: str):
         string_for_connection = (
@@ -38,3 +38,10 @@ class SqlWritterFromExcel:
         )
         
         return create_engine(string_for_connection)
+    
+    def _getSheetName(self, excel_file_path):
+        excel_file_data = pd.ExcelFile(excel_file_path)
+        sheet_name = excel_file_data.sheet_names[0]
+        excel_file_data.close()
+        return sheet_name
+
