@@ -57,12 +57,27 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         self.generatedDatabase = database_name
         sqlWritterFromExcel.write(database_name, odsFilePathString)
         os.remove(odsFilePathString)
+
+    def test_check_tables_based_on_spreadsheet(self):
+        table1_name = "first_spreadsheet"
+        table2_name = "second_spreadsheet"
+        database_name = "database_" + Utils.generate_friendly_date_string()
+
+        Utils.create_database(database_name, self.mySqlDriver)
+        created_ods = self._create_ods()
+
+        self.assertTrue(self._check_table_exists(table1_name, database_name))
+        self.assertTrue(self._check_table_exists(table2_name, database_name))
         
     def _create_ods(self):
-        ods_file_name_path = Utils.generate_friendly_date_string() + ".ods"
-        ordered_dict = OrderedDict()
-        ordered_dict.update({"Sheet 1": [[1,2,3],[4,5,6],[7,8,9]]})
-        save_data(ods_file_name_path, ordered_dict)
-        return ods_file_name_path
+        # ods_file_name_path = Utils.generate_friendly_date_string() + ".ods"
+        # ordered_dict = OrderedDict()
+        # ordered_dict.update({"Sheet 1": [[1,2,3],[4,5,6],[7,8,9]]})
+        # save_data(ods_file_name_path, ordered_dict)
+        # return ods_file_name_path
+        self._create_ods_with_data()
+    
+    def _check_table_exists(self, table_name, database_name):
+        return False
         
         

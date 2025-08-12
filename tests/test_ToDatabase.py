@@ -6,11 +6,8 @@ from table_to_database.Utils import Utils
 from table_to_database.MySqlConfiguration import MySqlConfiguration
 from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseNotAvailableException
 from table_to_database.MySqlDriver import MySqlDriver
-from collections import OrderedDict
 from .TestUtils import TestUtils
 from .TestTrait import TestTrait
-from pyexcel_ods import save_data
-import os
 from .TearDownMethods import TearDownMethods
 
 class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
@@ -39,7 +36,7 @@ class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
         database_configuration = TestUtils.get_test_db_configuration()
         
         data_create_table_one_row = [['column1', 'column2', 'column3'], [1, 2, 3]]
-        ods_file_name = self._create_ods(data_create_table_one_row)
+        ods_file_name = self._create_ods_with_data(data_create_table_one_row)
         self.generatedOds = ods_file_name
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = Utils.generate_friendly_date_string()
@@ -51,7 +48,7 @@ class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
         database_configuration = TestUtils.get_test_db_configuration()
         self._database_connection(database_configuration)
         data_create_table_one_row = [['column1', 'column2', 'column3'], [1, 2, 3]]
-        table_file_name = self._create_ods(data_create_table_one_row)
+        table_file_name = self._create_ods_with_data(data_create_table_one_row)
         self.toDatabase.set_database_configuration(database_configuration)
         database_name = "database_" + Utils.generate_friendly_date_string()
         results = self.toDatabase.to_database(table_file_name, database_name)
@@ -65,11 +62,5 @@ class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
             database_configuration.test_connection()
         except DatabaseNotAvailableException:
             raise Exception("Tests can't proceed. Please, have a test database available...")
-    
-    def _create_ods(self, data_from_list):
-        file_name_path = "generic_table_file_" + Utils.generate_friendly_date_string() + ".ods"
-        order_dict = OrderedDict()
-        order_dict.update({"Sheet 1": data_from_list})
-        save_data(file_name_path, order_dict)
-        return file_name_path
+
 

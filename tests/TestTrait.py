@@ -1,5 +1,8 @@
 from table_to_database.MySqlDriver import MySqlDriver
 from .TestUtils import TestUtils
+from collections import OrderedDict
+from pyexcel_ods import save_data
+from table_to_database.Utils import Utils
 
 class TestTrait:
     def _count_registers(self, database_name: str, table_name) -> int:
@@ -15,3 +18,10 @@ class TestTrait:
             return int(counting)
         except Exception as e:
             print(f"Error counting registers: {e}")
+
+    def _create_ods_with_data(self, data_from_list):
+        file_name_path = "generic_table_file_" + Utils.generate_friendly_date_string() + ".ods"
+        order_dict = OrderedDict()
+        order_dict.update({"Sheet 1": data_from_list})
+        save_data(file_name_path, order_dict)
+        return file_name_path
