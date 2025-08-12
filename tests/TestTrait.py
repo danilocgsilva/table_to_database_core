@@ -19,9 +19,12 @@ class TestTrait:
         except Exception as e:
             print(f"Error counting registers: {e}")
 
-    def _create_ods_with_data(self, data_from_list):
+    def _create_ods_with_data(self, data_from_list, sheet_name = None):
         file_name_path = "generic_table_file_" + Utils.generate_friendly_date_string() + ".ods"
         order_dict = OrderedDict()
-        order_dict.update({"Sheet 1": data_from_list})
+        print(sheet_name)
+        if sheet_name is None:
+            sheet_name = "Sheet 1"
+        order_dict.update({sheet_name: data_from_list})
         save_data(file_name_path, order_dict)
         return file_name_path

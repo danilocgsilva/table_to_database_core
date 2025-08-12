@@ -16,13 +16,13 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         self.mySqlDriver.set_database_configuration(TestUtils.get_test_db_configuration())
         self.generatedOds = None
         self.generatedDatabase = None
-        
+        self.mysqlConfiguration = TestUtils.get_test_db_configuration()
+
     def tearDown(self):
         self._tearDown()
-    
+
     def test_raise_exception_if_database_not_exists(self):
-        mySqlConfiguration = TestUtils.get_test_db_configuration()
-        sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
+        sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
         data_table = [
             ['column1', 'column2', 'column3'],
             [1, 2, 3]
@@ -31,10 +31,9 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         self.generatedOds = odsFilePathString
         with self.assertRaises(DatabaseNotExistsException):
             sqlWritterFromExcel.write("some_database", odsFilePathString)
-    
+
     def test_write_one_line(self):
-        mySqlConfiguration = TestUtils.get_test_db_configuration()
-        sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
+        sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
         data_table = [
             ['column1', 'column2', 'column3'],
             [1, 2, 3]
@@ -47,10 +46,9 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         os.remove(odsFilePathString)
         created_rows = self._count_registers(results.database_created, results.tables_created[0])
         self.assertEqual(created_rows, 1)
-        
+
     def test_write_three_line(self):
-        mySqlConfiguration = TestUtils.get_test_db_configuration()
-        sqlWritterFromExcel = SqlWritterFromExcel(mySqlConfiguration)
+        sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
         odsFilePathString = self._create_ods()
         database_name = "database_" + Utils.generate_friendly_date_string()
         Utils.create_database(database_name, self.mySqlDriver)
@@ -60,24 +58,28 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
 
     def test_check_tables_based_on_spreadsheet(self):
         table1_name = "first_spreadsheet"
-        table2_name = "second_spreadsheet"
-        database_name = "database_" + Utils.generate_friendly_date_string()
+        self.generatedDatabase = "database_" + Utils.generate_friendly_date_string()
 
-        Utils.create_database(database_name, self.mySqlDriver)
-        created_ods = self._create_ods()
+        Utils.create_database(self.generatedDatabase, self.mySqlDriver)
+        print("@" + self.generatedDatabase + "@")
 
-        self.assertTrue(self._check_table_exists(table1_name, database_name))
-        self.assertTrue(self._check_table_exists(table2_name, database_name))
-        
+        data_to_create_table = [[1,2,3],[4,5,6],[7,8,9]]
+        created_ods = self._create_ods_with_data(data_to_create_table, table1_name)
+        print(created_ods)
+
+        sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
+        sqlWritterFromExcel.write(self.generatedDatabase, created_ods)
+
+        self.assertTrue(self._check_table_exists(table1_name, self.generatedDatabase))
+
     def _create_ods(self):
-        # ods_file_name_path = Utils.generate_friendly_date_string() + ".ods"
-        # ordered_dict = OrderedDict()
-        # ordered_dict.update({"Sheet 1": [[1,2,3],[4,5,6],[7,8,9]]})
-        # save_data(ods_file_name_path, ordered_dict)
-        # return ods_file_name_path
-        self._create_ods_with_data()
-    
+        data_to_create_table = [[1,2,3],[4,5,6],[7,8,9]]
+        return self._create_ods_with_data(data_to_create_table)
+
     def _check_table_exists(self, table_name, database_name):
+        mysql_driver = MySqlDriver()
+        mysql_driver.exec(f"USE {database_name}")
+        query_list_tables = f"SHOW TABLES LIKE 'table_name';"
+
         return False
-        
-        
+
