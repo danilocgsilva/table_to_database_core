@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 class TestUtils:
     @staticmethod
-    def get_test_db_configuration():
+    def get_test_db_configuration() -> MySqlConfiguration:
         """Get the test database configuration from environment variables."""
         database_configuration = MySqlConfiguration()
         database_configuration.user = os.environ.get("TEST_DB_USER")

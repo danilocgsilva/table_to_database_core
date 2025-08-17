@@ -13,6 +13,8 @@ Packages required:
 
 This packages uses the `pyexcel_ods` package to create ods files por testing.
 
+Check the package usage: [docs/USAGE_GUIDE.md](docs/USAGE_GUIDE.md)
+
 ## Testing
 
 The unit tests (actually, integration tests) uses real databse connection. It is expected that variables like
