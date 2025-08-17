@@ -69,6 +69,25 @@ class test_SqlWritterFromExcel(unittest.TestCase, TestTrait, TearDownMethods):
         sqlWritterFromExcel.write(self.generatedDatabase, created_ods)
 
         self.assertTrue(self._check_table_exists(table1_name, self.generatedDatabase))
+        
+    def test_create_two_tables(self):
+        self.generatedDatabase = "database_" + Utils.generate_friendly_date_string()
+        
+        Utils.create_database(self.generatedDatabase, self.mySqlDriver)
+        
+        data_to_table_1 = [['column1','column2','column3'],[4,5,6],[7,8,9]]
+        data_to_table_2 = [['column1_ss2','column2_ss2','column3_ss2'],[1,2,3],[10,11,12]]
+        
+        created_ods = self._create_ods_with_spreadsheets(
+            {"spreadsheet_1": data_to_table_1},
+            {"spreadsheet_2": data_to_table_2}
+        )
+        
+        sqlWritterFromExcel = SqlWritterFromExcel(self.mysqlConfiguration)
+        sqlWritterFromExcel.write(self.generatedDatabase, created_ods)
+        
+        self.assertTrue(self._check_table_exists("spreadsheet_1", self.generatedDatabase))
+        self.assertTrue(self._check_table_exists("spreadsheet_2", self.generatedDatabase))
 
     def _create_ods(self):
         data_to_create_table = [[1,2,3],[4,5,6],[7,8,9]]

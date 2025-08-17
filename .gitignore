@@ -2,3 +2,4 @@ table_to_database/__pycache__/*
 tests/__pycache__/*
 table_to_database/Facade/__pycache__/*
 table_to_database/Exceptions/__pycache__/*
+__pycache__/test_generate_report.cpython-311.pyc
