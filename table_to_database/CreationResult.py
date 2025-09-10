@@ -1,8 +1,14 @@
 class CreationResult:
-    def __init__(self, success: bool, tables_created: list, database_created: str):
+    def __init__(
+        self, success: bool, 
+        tables_created: list, 
+        database_created: str,
+        data_duplication: bool
+    ):
         self._success = success
         self._tables_created = tables_created
         self._database_created = database_created
+        self._data_duplication = data_duplication
     
     @property
     def success(self) -> bool:
@@ -27,3 +33,7 @@ class CreationResult:
     @database_created.setter
     def database_created(self, value):
         self._database_created = value
+        
+    @property
+    def data_duplication(self) -> bool:
+        return self._data_duplication

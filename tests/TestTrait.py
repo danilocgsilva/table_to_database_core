@@ -3,6 +3,7 @@ from .TestUtils import TestUtils
 from collections import OrderedDict
 from pyexcel_ods import save_data
 from table_to_database.Utils import Utils
+from table_to_database.Exceptions.DatabaseNotAvailableException import DatabaseNotAvailableException
 
 class TestTrait:
     def _count_registers(self, database_name: str, table_name) -> int:
@@ -35,3 +36,9 @@ class TestTrait:
             order_dict.update(data_dict)
         save_data(file_name_path, order_dict)
         return file_name_path
+    
+    def _database_connection(self, database_configuration):
+        try:
+            database_configuration.test_connection()
+        except DatabaseNotAvailableException:
+            raise Exception("Tests can't proceed. Please, have a test database available...")

@@ -29,7 +29,7 @@ class SqlWritterFromExcel:
                 if_exists='replace',
                 index=False
             )
-        return CreationResult(True, sheets_names, database_name)
+        return CreationResult(True, sheets_names, database_name, True)
         
         
     def get_engine(self, database_name: str):
