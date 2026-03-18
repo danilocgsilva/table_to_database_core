@@ -1,0 +1,35 @@
+services:
+  table_to_database_core:
+    build:
+      context: .
+    container_name: table_to_database_core
+    volumes:
+      - ./app:/app
+      - ./tables:/tables
+    depends_on:
+      - table_to_database_database
+    environment:
+      - TEST_DB_USER=root
+      - TEST_DB_PASSWORD=stronggpassword
+      - TEST_DB_HOST=table_to_database_database
+  table_to_database_database:
+    image: 'mysql:latest'
+    container_name: table_to_database_database
+    environment:
+      - MYSQL_ROOT_PASSWORD=stronggpassword
+      - TEST_DB_USER=root
+      - TEST_DB_PASSWORD=stronggpassword
+      - TEST_DB_HOST=0.0.0.0
+    ports:
+      - '3810:3306'
+  table_to_database_phpmyadmin:
+    image: 'phpmyadmin/phpmyadmin:latest'
+    container_name: table_to_database_phpmyadmin
+    environment:
+      - PMA_HOST=table_to_database_database
+      - PMA_PORT=3306
+      - UPLOAD_LIMIT=100M
+    ports:
+      - '8080:80'
+    depends_on:
+      - table_to_database_database
