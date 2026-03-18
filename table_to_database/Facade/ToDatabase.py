@@ -10,6 +10,7 @@ class ToDatabase:
     def __init__(self, to_database_core: ToDatabaseCore):
         self.to_database_core = to_database_core
         self.database_configuration = None
+        self.database_name = None
         
     def set_database_configuration(self, database_configuration: MySqlConfiguration):
         self.database_configuration = database_configuration
@@ -43,3 +44,5 @@ class ToDatabase:
             raise ValueError("Database password cannot be empty.")
         self.database_configuration.password = password
         
+    def set_database_name(self, database_name: str):
+        self.database_name = database_name
