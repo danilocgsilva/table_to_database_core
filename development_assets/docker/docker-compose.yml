@@ -12,6 +12,7 @@ services:
       - TEST_DB_USER=root
       - TEST_DB_PASSWORD=stronggpassword
       - TEST_DB_HOST=table_to_database_database
+    working_dir: /app
   table_to_database_database:
     image: 'mysql:latest'
     container_name: table_to_database_database

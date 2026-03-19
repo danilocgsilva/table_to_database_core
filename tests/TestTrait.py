@@ -42,3 +42,9 @@ class TestTrait:
             database_configuration.test_connection()
         except DatabaseNotAvailableException:
             raise Exception("Tests can't proceed. Please, have a test database available...")
+        
+    def _check_if_database_exists(self):
+        mysql_driver = MySqlDriver()
+        mysql_driver.set_database_configuration(TestUtils.get_test_db_configuration())
+        mysql_results = mysql_driver.exec("SHOW DATABASES;")
+        

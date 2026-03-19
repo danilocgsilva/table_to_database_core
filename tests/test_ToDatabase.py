@@ -70,8 +70,11 @@ class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
         self.toDatabase.to_database(self.generatedOds, self.generatedDatabase)
         self.toDatabase.to_database(self.generatedOds, self.generatedDatabase)
         
-    # def test_set_database_name(self):
-    #     data_create_table_one = [['column1', 'column2', 'column3'], [1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    def test_set_database_name(self):
+        database_name = "my_testing_database_name"
+        data_create_ods = [['column1', 'column2', 'column3'], [1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        self.generatedOds = self._create_ods_with_data(data_create_ods, database_name)
+        self.toDatabase.to_database(database_name)
 
     def _configure_configuration(self):
         database_configuration = TestUtils.get_test_db_configuration()

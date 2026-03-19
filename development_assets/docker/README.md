@@ -1,0 +1,1 @@
+You must put this folder one level over the code. Check the docker configuration to understand how to mount the application code into the docker container.
