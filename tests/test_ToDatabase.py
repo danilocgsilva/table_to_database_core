@@ -74,7 +74,8 @@ class test_ToDatabase(unittest.TestCase, TestTrait, TearDownMethods):
         database_name = "my_testing_database_name"
         data_create_ods = [['column1', 'column2', 'column3'], [1, 2, 3], [4, 5, 6], [7, 8, 9]]
         self.generatedOds = self._create_ods_with_data(data_create_ods, database_name)
-        self.toDatabase.to_database(database_name)
+        self.toDatabase.to_database(self.generatedOds, database_name)
+        self.assertTrue(self._check_if_database_exists(database_name))
 
     def _configure_configuration(self):
         database_configuration = TestUtils.get_test_db_configuration()
