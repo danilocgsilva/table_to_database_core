@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='table_to_database',
-    version='1.1',
+    version='1.2.1',
     packages=find_packages(),
     install_requires=[
         'pyexcel_ods',
